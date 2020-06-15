@@ -4,7 +4,10 @@ pipeline {
     stage('Executing general high-level tests') {
       agent any
       steps {
-        sh 'pwd'
+        Matlab(matlabRootFolder: '/Applications/Matlab_R2019b.app/') {
+          RunMatlabCommand(matlabCommand: 'run_all_examples')
+        }
+
       }
     }
 
