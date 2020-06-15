@@ -8,6 +8,7 @@ pipeline {
           RunMatlabCommand(matlabCommand: 'run_all_examples')
         }
 
+        sh 'pwd'
       }
     }
 
