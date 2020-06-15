@@ -2,9 +2,9 @@ pipeline {
   agent any
   stages {
     stage('Executing general high-level tests') {
+      agent any
       steps {
-        RunMatlabCommand(matlabCommand: 'run_all_examples')
-        echo 'Hello!'
+        sh 'ls -laG'
       }
     }
 
