@@ -6,7 +6,7 @@ pipeline {
       steps {
         sh 'pwd'
         Matlab(matlabRootFolder: '/Applications/Matlab_R2019b.app') {
-          sh 'echo $MATLAB_ROOT'
+          sh 'export MATLAB_ROOT=\'/Applications/Matlab_R2019b.app\''
         }
 
         RunMatlabCommand(matlabCommand: 'run_all_examples')
