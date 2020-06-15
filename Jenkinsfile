@@ -4,7 +4,7 @@ pipeline {
     stage('Executing general high-level tests') {
       agent any
       steps {
-        sh 'ls -laG'
+        sh 'pwd'
       }
     }
 
