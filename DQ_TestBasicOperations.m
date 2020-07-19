@@ -8,7 +8,7 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
             % Most basic multiplication test that evaluates
             % i^2=j^2=k^2=i*j*k = -1 and i*j=k, k*i=j, j*k=i
             actual_solution = i_*i_;
-            expected_solution = DQ(1);
+            expected_solution = DQ(-1);
             test_case.verifyEqual(actual_solution,expected_solution);
             
             actual_solution = j_*j_;
