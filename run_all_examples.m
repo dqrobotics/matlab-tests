@@ -66,14 +66,12 @@ function [fail_count, fail_log] = run_all_examples(varargin)
             fprintf('\n%d of %d: Executing %s', i, length(file), file{i});
             eval(file{i});
         catch
-           % clc;
             fail_log = [fail_log, file{i}, ', '];
             fprintf('\n');
             warning('Could not execute file %s', file{i});
             fail_count = fail_count + 1; 
         end
     end
-  %  clc;
     fprintf('\nNumber of fails: %d', fail_count);
     fprintf('\n%s', fail_log);
 end
