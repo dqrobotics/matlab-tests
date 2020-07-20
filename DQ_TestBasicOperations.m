@@ -10,6 +10,7 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
     
     properties
         dq = DQ([1 2 3 4 5 6 7 8]);
+        tolerance  = DQ.threshold
     end
     
     methods (Test)
@@ -74,7 +75,8 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
             dq1 = DQ(h);    
             dq2 = DQ(h);   
             actual_solution = dq1/dq2;
-            test_case.verifyEqual(actual_solution,expected_solution);
+            test_case.verifyThat(actual_solution,isEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(test_case.tolerance)));
         end
         
         function test_left_division(test_case)
