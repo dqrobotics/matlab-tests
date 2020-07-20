@@ -8,15 +8,16 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
     % Since tests are hardcoded (e.g., i_*i_ = -1), they evaluate just some
     % very specific cases for all DQ operations
     
+    
+    
     properties
         dq = DQ([1 2 3 4 5 6 7 8]);
-        tolerance  = DQ.threshold
+        tolerance  = DQ.threshold;
     end
     
     methods (Test)
         
         % TODO: test different constructors
-        
         
         function test_multiplications(test_case)
             include_namespace_dq;
@@ -70,22 +71,32 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
         end
         
         function test_right_division(test_case)
-            expected_solution = DQ(1);
+            import matlab.unittest.constraints.IsEqualTo;
+            import matlab.unittest.constraints.AbsoluteTolerance;
+
+            expected_solution = 1.0;
             h = rand(8,1);
             dq1 = DQ(h);    
             dq2 = DQ(h);   
-            actual_solution = dq1/dq2;
-            test_case.verifyThat(actual_solution,isEqualTo(expected_solution,...
+            actual_solution = double(dq1/dq2);
+          
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
                 'Within', AbsoluteTolerance(test_case.tolerance)));
+        
         end
         
-        function test_left_division(test_case)
-            expected_solution = DQ(1);
+        function test_left_division(test_case)            
+            import matlab.unittest.constraints.IsEqualTo;
+            import matlab.unittest.constraints.AbsoluteTolerance;
+            
+            expected_solution = 1.0;
             h = rand(8,1);
             dq1 = DQ(h);   
             dq2 = DQ(h); 
-            actual_solution = dq1\dq2;
-            test_case.verifyEqual(actual_solution,expected_solution);
+            actual_solution = double(dq1\dq2);
+            
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(test_case.tolerance)));
         end
         
         function test_unary_minus(test_case)
@@ -108,6 +119,9 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
         %TODO .' and sharp conjugate
         
         function test_log(test_case)
+            import matlab.unittest.constraints.IsEqualTo;
+            import matlab.unittest.constraints.AbsoluteTolerance;
+            
             include_namespace_dq;
             n = k_;
             phi = pi/2;
@@ -115,10 +129,11 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
             r = cos(phi/2) + n * sin(phi/2); 
             x = r + 0.5*E_*p*r;
             
-            expected_solution = 0.5*(n*phi + E_*p);
+            expected_solution = n*phi/2 + E_*p/2;
+            actual_solution = log(x);
             
-            actual_solution = log(x);            
-            test_case.verifyEqual(actual_solution,expected_solution);
+            test_case.verifyThat(actual_solution.q, IsEqualTo(expected_solution.q,...
+                'Within', AbsoluteTolerance(test_case.tolerance)));
         end
         
         function test_exp(test_case)
@@ -135,6 +150,11 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
         end
         
         function test_inv(test_case)
+            import matlab.unittest.constraints.IsEqualTo;
+            import matlab.unittest.constraints.AbsoluteTolerance;
+            
+            include_namespace_dq
+            
             n = k_;
             phi = pi/2;
             p = 1*i_ +  2*j_ + 3*k_;
@@ -148,30 +168,38 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
             expected_solution = rconj - 0.5*E_*rconj*p;
             actual_solution = inv(x);
             
-            test_case.verifyEqual(actual_solution,expected_solution);
+            test_case.verifyThat(actual_solution.q,IsEqualTo(expected_solution.q,...
+                'Within', AbsoluteTolerance(test_case.tolerance)));
         end
         
         function test_hami4(test_case)
+            import matlab.unittest.constraints.IsEqualTo;
+            import matlab.unittest.constraints.AbsoluteTolerance
+            
             r = normalize(DQ(rand(4,1)));
             Hplus = hamiplus4(r);
             Hminus = haminus4(r);
             
-            expected_solution(eye(4));
+            expected_solution = eye(4);
             
             %The Hamilton operator of a unit quaternion belongs to O(4).
             %Thus, the inverse equals the transpose. Furthermore, the
             %tranpose equals the Hamilton operator of the conjugate.
             actual_solution = Hplus*Hplus';
-            test_case.verifyEqual(actual_solution,expected_solution);
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(eps)));
             
             actual_solution = Hplus*hamiplus4(r');
-            test_case.verifyEqual(actual_solution,expected_solution);
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(eps)));
             
             actual_solution = Hminus*Hminus';
-            test_case.verifyEqual(actual_solution,expected_solution);
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(eps)));
             
             actual_solution = Hminus*haminus4(r');
-            test_case.verifyEqual(actual_solution,expected_solution);
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(eps)));
             
             %Let's perform some multiplications using normal dual
             %quaternion multiplications
@@ -179,13 +207,15 @@ classdef DQ_TestBasicOperations < matlab.unittest.TestCase
             a = DQ(rand(4,1));
             b = DQ(rand(4,1));
             
-            expected_solution(DQ(0));
+            expected_solution = vec4(DQ(0));
             
-            actual_solution = a*b - DQ(hamiplus4(a)*vec4(b));
-            test_case.verifyEqual(actual_solution,expected_solution);
+            actual_solution = vec4(a*b) - hamiplus4(a)*vec4(b);
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(eps)));
             
-            actual_solution = a*b - DQ(haminus4(b)*vec4(a));
-            test_case.verifyEqual(actual_solution,expected_solution);
+            actual_solution = vec4(a*b) - haminus4(b)*vec4(a);
+            test_case.verifyThat(actual_solution,IsEqualTo(expected_solution,...
+                'Within', AbsoluteTolerance(eps)));
         end
     end
 end
