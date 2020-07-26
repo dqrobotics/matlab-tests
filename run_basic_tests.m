@@ -5,4 +5,4 @@ for i = 1:length(result)
        exit(1,"force");
     end
 end
-
+exit(0)
