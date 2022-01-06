@@ -23,7 +23,9 @@ classdef DQTestCase < matlab.unittest.TestCase
     %   Detailed explanation goes here
     
     properties
-        Property1
+        dq_a_list;
+        dq_b_list;
+        mat;
     end
     
     methods
@@ -31,8 +33,12 @@ classdef DQTestCase < matlab.unittest.TestCase
 %         not recommended. TestCase constructor and destructor methods are not
 %         considered test content and should not be used to perform qualifications.
 %         (https://www.mathworks.com/help/matlab/ref/matlab.unittest.testcase-class.html)
-%         function obj = DQTestCase(inputArg1,inputArg2)
-%         end       
+        function testCase = DQTestCase()
+            data = load('DQ_test.mat');
+            testCase.mat = data;
+            testCase.dq_a_list = data.random_dq_a;
+            testCase.dq_b_list = data.random_dq_b;            
+        end    
 
     end
     methods (Test)
@@ -68,10 +74,12 @@ classdef DQTestCase < matlab.unittest.TestCase
             verifyError(testCase,@() DQ([1, 2, 3, 4, 5]),'');
             
             %-------- Seven  
-            verifyError(testCase,@() DQ([1, 2, 3, 4, 5, 6, 7]),'');            
+            verifyError(testCase,@() DQ([1, 2, 3, 4, 5, 6, 7]),''); 
         end        
         
         function test_plus(testCase)
+            disp('flag 2')
+            testCase.dq_a_list
         end
     end
 end
