@@ -57,8 +57,21 @@ classdef DQTestCase < matlab.unittest.TestCase
             
             %-------- One
             testCase.assertEqual(DQ(1),...
-                DQ([1, 0, 0, 0, 0, 0, 0, 0]),"Incorrect 1 element constructor")
+                DQ([1, 0, 0, 0, 0, 0, 0, 0]),"Incorrect 1 element constructor")            
+        end
+        
+        function test_contructor_invalid(testCase)
+            %-------- Two  
+            verifyError(testCase,@() DQ([1, 2]),'');
             
+            %-------- Five 
+            verifyError(testCase,@() DQ([1, 2, 3, 4, 5]),'');
+            
+            %-------- Seven  
+            verifyError(testCase,@() DQ([1, 2, 3, 4, 5, 6, 7]),'');            
+        end        
+        
+        function test_plus(testCase)
         end
     end
 end
