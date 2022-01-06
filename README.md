@@ -12,7 +12,9 @@ sudo apt upgrade -y
 sudo apt install git
 ```
 3. Install MATLAB
-4. Export your MATLAB to your PATH
+- `Matlab`
+- `Optimization Toolbox`
+5. Export your MATLAB to your PATH
 ```sh
 echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
