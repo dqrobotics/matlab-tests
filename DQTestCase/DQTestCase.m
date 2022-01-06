@@ -27,16 +27,38 @@ classdef DQTestCase < matlab.unittest.TestCase
     end
     
     methods
-        function obj = DQTestCase(inputArg1,inputArg2)
-            %DQTESTCASE Construct an instance of this class
-            %   Detailed explanation goes here
-            obj.Property1 = inputArg1 + inputArg2;
-        end
-        
-        function outputArg = method1(obj,inputArg)
-            %METHOD1 Summary of this method goes here
-            %   Detailed explanation goes here
-            outputArg = obj.Property1 + inputArg;
+%         Defining constructor or destructor methods in a TestCase subclass is
+%         not recommended. TestCase constructor and destructor methods are not
+%         considered test content and should not be used to perform qualifications.
+%         (https://www.mathworks.com/help/matlab/ref/matlab.unittest.testcase-class.html)
+%         function obj = DQTestCase(inputArg1,inputArg2)
+%         end       
+
+    end
+    methods (Test)
+        function test_constructor_valid(testCase)           
+            
+            %-------- Eight
+            testCase.assertEqual(DQ([1, 2, 3, 4, 5, 6, 7, 8]),...
+                DQ([1, 2, 3, 4, 5, 6, 7, 8]),"Incorrect 8 elements constructor")
+            
+            %-------- Six
+            testCase.assertEqual(DQ([1, 2, 3, 4, 5, 6]),...
+                DQ([0, 1, 2, 3, 0, 4, 5, 6]),"Incorrect 6 elements constructor")
+            
+            %-------- Three
+            testCase.assertEqual(DQ([1, 2, 3]),...
+                DQ([0, 1, 2, 3, 0, 0, 0, 0]),"Incorrect 3 elements constructor")
+            
+                        
+            %-------- Four
+            testCase.assertEqual(DQ([1, 2, 3, 4]),...
+                DQ([1, 2, 3, 4, 0, 0, 0, 0]),"Incorrect 4 elements constructor")
+            
+            %-------- One
+            testCase.assertEqual(DQ(1),...
+                DQ([1, 0, 0, 0, 0, 0, 0, 0]),"Incorrect 1 element constructor")
+            
         end
     end
 end
