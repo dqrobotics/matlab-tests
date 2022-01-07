@@ -27,7 +27,7 @@ classdef DQTestCase < matlab.unittest.TestCase
         dq_b_list;
         mat;
         tolerance = 1e-15;
-        almost_equal_tolerance = 1e-12;
+        almost_equal_tolerance = 1e-11;
     end
     
     methods
@@ -86,7 +86,8 @@ classdef DQTestCase < matlab.unittest.TestCase
                 a = testCase.dq_a_list(:,i);
                 b = testCase.dq_b_list(:,i);
                 c = testCase.mat.result_of_plus(:,i);
-                testCase.assertEqual(a+b, c, "Error in +")          
+                testCase.assertEqual(a+b, c, "AbsTol", testCase.tolerance,...
+                    "Error in +")          
             end         
         end
         
@@ -95,7 +96,8 @@ classdef DQTestCase < matlab.unittest.TestCase
                 a = testCase.dq_a_list(:,i);
                 b = testCase.dq_b_list(:,i);
                 c = testCase.mat.result_of_minus(:,i);
-                testCase.assertEqual(a-b, c, "Error in -")               
+                testCase.assertEqual(a-b, c,"AbsTol", testCase.tolerance,...
+                    "Error in -")               
             end         
         end
         
@@ -139,7 +141,99 @@ classdef DQTestCase < matlab.unittest.TestCase
                 testCase.assertEqual(vec8(Ad(DQ(a),DQ(b))), c,...
                     "AbsTol", testCase.almost_equal_tolerance, "Error in Ad")               
             end         
+        end   
+        
+        function test_adsharp(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);
+                b = testCase.dq_b_list(:,i);
+                c = testCase.mat.result_of_Adsharp(:,i);
+                testCase.assertEqual(vec8(Adsharp(DQ(a),DQ(b))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in Adsharp")               
+            end         
+        end 
+        %----Unary operators
+        function test_conj(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);               
+                c = testCase.mat.result_of_conj(:,i);
+                testCase.assertEqual(vec8(conj(DQ(a))), c,...
+                    "AbsTol", testCase.tolerance, "Error in conj")               
+            end         
+        end   
+        
+        function test_sharp(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);                
+                c = testCase.mat.result_of_sharp(:,i);
+                testCase.assertEqual(vec8(sharp(DQ(a))), c,...
+                    "AbsTol", testCase.tolerance, "Error in sharp")               
+            end         
+        end     
+        
+        function test_normalize(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);               
+                c = testCase.mat.result_of_normalize(:,i);
+                testCase.assertEqual(vec8(normalize(DQ(a))), c,...
+                    "AbsTol", testCase.tolerance, "Error in normalize")               
+            end         
+        end   
+        
+        function test_translation(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);                
+                c = testCase.mat.result_of_translation(:,i);
+                testCase.assertEqual(vec8(translation(normalize(DQ(a)))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in translation")               
+            end         
+        end     
+        %--       
+        function test_rotation(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);               
+                c = testCase.mat.result_of_rotation(:,i);
+                testCase.assertEqual(vec8(rotation(normalize(DQ(a)))), c,...
+                    "AbsTol", testCase.tolerance, "Error in rotation")               
+            end         
+        end   
+        
+        function test_of_log(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);                
+                c = testCase.mat.result_of_log(:,i);
+                testCase.assertEqual(vec8(log(normalize(DQ(a)))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in log")               
+            end         
+        end     
+        
+        function test_of_exp(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);               
+                c = testCase.mat.result_of_exp(:,i);
+                testCase.assertEqual(vec8(exp(DQ(vec6(DQ(a)) ))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in exp")               
+            end         
+        end   
+        
+        function test_of_rotation_axis(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);                
+                c = testCase.mat.result_of_rotation_axis(:,i);
+                testCase.assertEqual(vec8(rotation_axis(normalize(DQ(a)))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in rotation axis")               
+            end         
+        end 
+        
+        function test_of_rotation_angle(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);                
+                c = testCase.mat.result_of_rotation_angle(:,i);
+                testCase.assertEqual(vec8(DQ(rotation_angle(normalize(DQ(a))))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in rotation angle")               
+            end         
         end         
+        
     end
 end
 
