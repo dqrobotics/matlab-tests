@@ -16,7 +16,7 @@ sudo apt install git
 - `Optimization Toolbox`
 5. Add your MATLAB binary to your PATH. (e.g. ~/MATLAB/R2021a/bin) 
 ```sh
-echo "export PATH=PATH:YOUR_MATLAB_PATH/" >> ~/.bashrc
+echo "export PATH=PATH:YOUR_MATLAB_PATH" >> ~/.bashrc
 source ~/.bashrc
 ```
 5. Configure your GithubActions runner using the github interface. 
