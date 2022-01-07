@@ -26,6 +26,8 @@ classdef DQTestCase < matlab.unittest.TestCase
         dq_a_list;
         dq_b_list;
         mat;
+        tolerance = 1e-15;
+        almost_equal_tolerance = 1e-12;
     end
     
     methods
@@ -38,7 +40,8 @@ classdef DQTestCase < matlab.unittest.TestCase
             testCase.mat = data;
             testCase.dq_a_list = data.random_dq_a;
             testCase.dq_b_list = data.random_dq_b;            
-        end    
+        end       
+
 
     end
     methods (Test)
@@ -75,12 +78,68 @@ classdef DQTestCase < matlab.unittest.TestCase
             
             %-------- Seven  
             verifyError(testCase,@() DQ([1, 2, 3, 4, 5, 6, 7]),''); 
-        end        
-        
-        function test_plus(testCase)
-            disp('flag 2')
-            testCase.dq_a_list
         end
+        
+        %----Binary operators
+        function test_plus(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);
+                b = testCase.dq_b_list(:,i);
+                c = testCase.mat.result_of_plus(:,i);
+                testCase.assertEqual(a+b, c, "Error in +")          
+            end         
+        end
+        
+        function test_minus(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);
+                b = testCase.dq_b_list(:,i);
+                c = testCase.mat.result_of_minus(:,i);
+                testCase.assertEqual(a-b, c, "Error in -")               
+            end         
+        end
+        
+        function test_times(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);
+                b = testCase.dq_b_list(:,i);
+                c = testCase.mat.result_of_times(:,i);                
+                testCase.assertEqual(vec8(DQ(a)*DQ(b)), vec8(DQ(c)),...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in *");     
+                % The absolute tolerance is used because of small
+                % discrepancies in the results. 
+            end         
+        end   
+        
+        function test_dot(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);
+                b = testCase.dq_b_list(:,i);
+                c = testCase.mat.result_of_dot(:,i);
+                testCase.assertEqual(vec8(dot(DQ(a),DQ(b))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in dot")               
+            end         
+        end    
+        
+        function test_cross(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);
+                b = testCase.dq_b_list(:,i);
+                c = testCase.mat.result_of_cross(:,i);
+                testCase.assertEqual(vec8(cross(DQ(a),DQ(b))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in cross")               
+            end         
+        end 
+        
+        function test_ad(testCase)            
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                a = testCase.dq_a_list(:,i);
+                b = testCase.dq_b_list(:,i);
+                c = testCase.mat.result_of_Ad(:,i);
+                testCase.assertEqual(vec8(Ad(DQ(a),DQ(b))), c,...
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in Ad")               
+            end         
+        end         
     end
 end
 
