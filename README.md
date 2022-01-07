@@ -14,7 +14,7 @@ sudo apt install git
 3. Install MATLAB
 - `Matlab`
 - `Optimization Toolbox`
-5. Add your MATLAB binary to your PATH. (e.g. ~/MATLAB/R2021a/bin) 
+4. Add your MATLAB binary to your PATH. (e.g. ~/MATLAB/R2021a/bin) 
 ```sh
 echo "export PATH=PATH:YOUR_MATLAB_PATH" >> ~/.bashrc
 source ~/.bashrc
