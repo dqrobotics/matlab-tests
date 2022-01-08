@@ -13,24 +13,24 @@
 %         DQTestCase() - Constructor
 %
 % DQTestCase Methods (Test):
-%         test_constructor_valid - Test if a dq constructor is valid
-%         test_contructor_invalid - Test if a dq constructor is invalid
-%         test_plus  - Test the dual quaternion addition
-%         test_minus - Test the dual quaternion subtraction
-%         test_times - Test the dual quaternion multiplication
-%         test_dot  - Test the dot product between two pure dual quaternions
-%         test_cross - Test the cross product between two pure dual quaternions
-%         test_ad    - Test the adjoint operation
-%         test_adsharp - Test the adsharp operation
-%         test_conj - Test the conjugate operation of dq
-%         test_sharp - Test the sharp conjugate operation of dq
-%         test_normalize - Test the normalize operation of dq
-%         test_translation - Test the translation operation of unit dq.
-%         test_rotation
-%         test_of_log
-%         test_of_exp
-%         test_of_rotation_axis
-%         test_of_rotation_angle
+%         test_constructor_valid - Tests if a dq constructor is valid
+%         test_contructor_invalid - Tests if a dq constructor is invalid
+%         test_plus  - Tests the dual quaternion addition
+%         test_minus - Tests the dual quaternion subtraction
+%         test_times - Tests the dual quaternion multiplication
+%         test_dot  - Tests the dot product between two pure dual quaternions
+%         test_cross - Tests the cross product between two pure dual quaternions
+%         test_ad    - Tests the adjoint operation
+%         test_adsharp - Tests the adsharp operation
+%         test_conj - Tests the conjugate operation of dq
+%         test_sharp - Tests the sharp conjugate operation of dq
+%         test_normalize - Tests the normalize operation of dq
+%         test_translation - Tests the translation operation of unit dq
+%         test_rotation - Tests the rotation operation of the unit dq
+%         test_of_log - Tests the logarithm operation of dq
+%         test_of_exp - Tests the exponential operation of pure dq
+%         test_of_rotation_axis - Tests the rotation axis operation of unit dq
+%         test_of_rotation_angle - Tests the rotation angle operation of unit dq
 %       
 %----------------------------------------------------------------------
 %--------------------how to get the mat file---------------------------
@@ -121,10 +121,13 @@ classdef DQTestCase < matlab.unittest.TestCase
     %DQTESTCASE Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties
-        mat;
-        tolerance = 1e-15;
-        almost_equal_tolerance = 1e-11;
+    properties 
+        % MAT corresponds to the m-file that contains the tested results. (See above)
+        mat;  
+        % TOLERANCE is used to compare if two results are equal.
+        tolerance = 1e-15;  
+        % This is used to compare if two results are equal but using a lower tolerance.
+        almost_equal_tolerance = 1e-11; 
     end
     
     methods
@@ -136,7 +139,11 @@ classdef DQTestCase < matlab.unittest.TestCase
     
     methods (Test)
         function test_constructor_valid(testCase)           
-            
+            % Tests the five ways to construct a dual quaternion.
+            % This method uses the function assertEqual(actual, expected, message), which 
+            % assert that actual is strictly equal to expected. 
+            % More information:
+            % https://www.mathworks.com/help/matlab/ref/matlab.unittest.qualifications.assertable-class.html
             %-------- Eight
             testCase.assertEqual(DQ([1, 2, 3, 4, 5, 6, 7, 8]),...
                 DQ([1, 2, 3, 4, 5, 6, 7, 8]),"Incorrect 8 elements constructor")
@@ -160,18 +167,26 @@ classdef DQTestCase < matlab.unittest.TestCase
         end
         
         function test_contructor_invalid(testCase)
+            % Tests the three incorrect ways to construct a dual
+            % quaternion. If the DQ library raises an error, then this test
+            % is passed.
+            % [output1,...,outputN] = assertError(testCase,actual,identifier,diagnostic)
+            % Assert that actual is a function handle that throws the exception specified by identifier.
+            % More information:
+            % https://www.mathworks.com/help/matlab/ref/matlab.unittest.qualifications.assertable-class.html
             %-------- Two  
-            verifyError(testCase,@() DQ([1, 2]),'');
+            assertError(testCase,@() DQ([1, 2]),'');
             
             %-------- Five 
-            verifyError(testCase,@() DQ([1, 2, 3, 4, 5]),'');
+            assertError(testCase,@() DQ([1, 2, 3, 4, 5]),'');
             
             %-------- Seven  
-            verifyError(testCase,@() DQ([1, 2, 3, 4, 5, 6, 7]),''); 
+            assertError(testCase,@() DQ([1, 2, 3, 4, 5, 6, 7]),''); 
         end
         
         %----Binary operators
-        function test_plus(testCase)            
+        function test_plus(testCase)  
+            % Tests the the dual quaternion addition
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i); 
                 b = testCase.mat.random_dq_b(:,i);
@@ -181,7 +196,8 @@ classdef DQTestCase < matlab.unittest.TestCase
             end         
         end
         
-        function test_minus(testCase)            
+        function test_minus(testCase) 
+            %Tests the dual quaternion subtraction
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i); 
                 b = testCase.mat.random_dq_b(:,i);
@@ -191,59 +207,74 @@ classdef DQTestCase < matlab.unittest.TestCase
             end         
         end
         
-        function test_times(testCase)            
+        function test_times(testCase)
+            % Tests the dual quaternion multiplication
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i); 
                 b = testCase.mat.random_dq_b(:,i);
                 c = testCase.mat.result_of_times(:,i);                
                 testCase.assertEqual(vec8(DQ(a)*DQ(b)), vec8(DQ(c)),...
                     "AbsTol", testCase.almost_equal_tolerance, "Error in *");     
-                % The absolute tolerance is used because of small
+                % The almost_equal_tolerance is used because of small
                 % discrepancies in the results. 
             end         
         end   
         
-        function test_dot(testCase)            
+        function test_dot(testCase) 
+            % Tests the dot product between two pure dual quaternions.
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i); 
                 b = testCase.mat.random_dq_b(:,i);
                 c = testCase.mat.result_of_dot(:,i);
                 testCase.assertEqual(vec8(dot(DQ(a),DQ(b))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in dot")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in dot") 
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results. 
             end         
         end    
         
-        function test_cross(testCase)            
+        function test_cross(testCase)  
+            % Test the cross product between two pure dual uaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i); 
                 b = testCase.mat.random_dq_b(:,i);
                 c = testCase.mat.result_of_cross(:,i);
                 testCase.assertEqual(vec8(cross(DQ(a),DQ(b))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in cross")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in cross")
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results. 
             end         
         end 
         
-        function test_ad(testCase)            
+        function test_ad(testCase)
+            % Tests the adjoint operation
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i); 
                 b = testCase.mat.random_dq_b(:,i);
                 c = testCase.mat.result_of_Ad(:,i);
                 testCase.assertEqual(vec8(Ad(DQ(a),DQ(b))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in Ad")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in Ad") 
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results.                
             end         
         end   
         
-        function test_adsharp(testCase)            
+        function test_adsharp(testCase)
+            % Tests the adsharp operation
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i); 
                 b = testCase.mat.random_dq_b(:,i);
                 c = testCase.mat.result_of_Adsharp(:,i);
                 testCase.assertEqual(vec8(Adsharp(DQ(a),DQ(b))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in Adsharp")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in Adsharp")
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results.                 
             end         
         end 
+
         %----Unary operators
-        function test_conj(testCase)            
+        function test_conj(testCase)    
+            % Tests the conjugate operation of dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                
                 c = testCase.mat.result_of_conj(:,i);
@@ -252,7 +283,8 @@ classdef DQTestCase < matlab.unittest.TestCase
             end         
         end   
         
-        function test_sharp(testCase)            
+        function test_sharp(testCase)
+            % Tests the sharp conjugate operation of dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                 
                 c = testCase.mat.result_of_sharp(:,i);
@@ -261,7 +293,8 @@ classdef DQTestCase < matlab.unittest.TestCase
             end         
         end     
         
-        function test_normalize(testCase)            
+        function test_normalize(testCase) 
+            % Tests the normalize operation of dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                
                 c = testCase.mat.result_of_normalize(:,i);
@@ -270,16 +303,20 @@ classdef DQTestCase < matlab.unittest.TestCase
             end         
         end   
         
-        function test_translation(testCase)            
+        function test_translation(testCase)   
+            % Tests the translation operation of unit dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                 
                 c = testCase.mat.result_of_translation(:,i);
                 testCase.assertEqual(vec8(translation(normalize(DQ(a)))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in translation")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in translation")
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results.
             end         
-        end     
-        %--       
-        function test_rotation(testCase)            
+        end 
+       
+        function test_rotation(testCase)  
+            % Tests the rotation operation of the unit dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                
                 c = testCase.mat.result_of_rotation(:,i);
@@ -288,39 +325,51 @@ classdef DQTestCase < matlab.unittest.TestCase
             end         
         end   
         
-        function test_of_log(testCase)            
+        function test_of_log(testCase)
+            %  Tests the logarithm operation of dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                
                 c = testCase.mat.result_of_log(:,i);
                 testCase.assertEqual(vec8(log(normalize(DQ(a)))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in log")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in log") 
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results.
             end         
         end     
         
-        function test_of_exp(testCase)            
+        function test_of_exp(testCase)  
+            % Tests the exponential operation of pure dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                
                 c = testCase.mat.result_of_exp(:,i);
                 testCase.assertEqual(vec8(exp(DQ(vec6(DQ(a)) ))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in exp")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in exp")
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results.
             end         
         end   
         
-        function test_of_rotation_axis(testCase)            
+        function test_of_rotation_axis(testCase) 
+            % Tests the rotation axis operation of unit dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                 
                 c = testCase.mat.result_of_rotation_axis(:,i);
                 testCase.assertEqual(vec8(rotation_axis(normalize(DQ(a)))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in rotation axis")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in rotation axis")
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results.
             end         
         end 
         
-        function test_of_rotation_angle(testCase)            
+        function test_of_rotation_angle(testCase) 
+            % Tests the rotation angle operation of unit dual quaternions
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 a = testCase.mat.random_dq_a(:,i);                 
                 c = testCase.mat.result_of_rotation_angle(:,i);
                 testCase.assertEqual(vec8(DQ(rotation_angle(normalize(DQ(a))))), c,...
-                    "AbsTol", testCase.almost_equal_tolerance, "Error in rotation angle")               
+                    "AbsTol", testCase.almost_equal_tolerance, "Error in rotation angle") 
+                % The almost_equal_tolerance is used because of small
+                % discrepancies in the results.
             end         
         end         
         
