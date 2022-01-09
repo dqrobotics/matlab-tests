@@ -160,7 +160,20 @@ classdef DQKinematicsTestCase < matlab.unittest.TestCase
                     "AbsTol", testCase.almost_equal_tolerance,...
                     "Error in plane_jacobian")          
             end   
-        end        
+        end   
+
+        function test_line_to_line_distance_jacobian(testCase)
+            % Tests the line_to_line_jacobian() method  
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                Jl = testCase.mat.result_of_line_to_line_distance_jacobian(:,:,i);
+                x = DQ(testCase.mat.result_of_fkm(:,i)).normalize();
+                h = DQ(testCase.mat.random_dq_a(:,i)).normalize() ;     
+                result = testCase.mat.result_of_line_to_line_distance_jacobian(:,:,i);
+                testCase.assertEqual(testCase.serial_manipulator_robot.line_to_line_distance_jacobian(Jl, get_line_from_dq(x, DQ.k), get_line_from_dq(h, DQ.k)), result,...
+                    "AbsTol", testCase.almost_equal_tolerance,...
+                    "Error in line_to_line_jacobian")          
+            end   
+        end          
 
 
     end
