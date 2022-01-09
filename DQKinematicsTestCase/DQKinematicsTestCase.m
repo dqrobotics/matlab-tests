@@ -100,8 +100,68 @@ classdef DQKinematicsTestCase < matlab.unittest.TestCase
                     "Error in DQ_WholeBody.fkm")          
             end 
         end 
-
         
+        function test_distance_jacobian(testCase)
+            % Tests the distance_jacobian() method  
+            for i=1:testCase.mat.NUMBER_OF_RANDOM  
+                %q = testCase.mat.random_q(:,i); 
+                %x = testCase.serial_manipulator_robot.fkm(q);
+                x = DQ(testCase.mat.result_of_fkm(:,i)).normalize();
+                J = testCase.mat.result_of_pose_jacobian(:,:,i);
+                Jd = testCase.mat.result_of_distance_jacobian(:,:,i);
+                testCase.assertEqual(testCase.serial_manipulator_robot.distance_jacobian(J,x), Jd,...
+                    "AbsTol", testCase.almost_equal_tolerance,...
+                    "Error in distance_jacobian")          
+            end   
+        end
+
+        function test_rotation_jacobian(testCase)
+            % Tests the rotation_jacobian() method  
+            for i=1:testCase.mat.NUMBER_OF_RANDOM                 
+                Jr = testCase.mat.result_of_rotation_jacobian(:,:,i);
+                J = testCase.mat.result_of_pose_jacobian(:,:,i);                
+                testCase.assertEqual(testCase.serial_manipulator_robot.rotation_jacobian(J), Jr,...
+                    "AbsTol", testCase.almost_equal_tolerance,...
+                    "Error in rotation_jacobian")          
+            end   
+        end
+
+        function test_translation_jacobian(testCase)
+            % Tests the translation_jacobian() method  
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                Jt = testCase.mat.result_of_translation_jacobian(:,:,i);
+                x = DQ(testCase.mat.result_of_fkm(:,i)).normalize();
+                J = testCase.mat.result_of_pose_jacobian(:,:,i);                
+                testCase.assertEqual(testCase.serial_manipulator_robot.translation_jacobian(J,x), Jt,...
+                    "AbsTol", testCase.almost_equal_tolerance,...
+                    "Error in translation_jacobian")          
+            end   
+        end  
+
+        function test_line_jacobian(testCase)
+            % Tests the line_jacobian() method  
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                Jl = testCase.mat.result_of_line_jacobian(:,:,i);
+                x = DQ(testCase.mat.result_of_fkm(:,i)).normalize();
+                J = testCase.mat.result_of_pose_jacobian(:,:,i);                
+                testCase.assertEqual(testCase.serial_manipulator_robot.line_jacobian(J,x, DQ.k), Jl,...
+                    "AbsTol", testCase.almost_equal_tolerance,...
+                    "Error in line_jacobian")          
+            end   
+        end 
+
+        function test_plane_jacobian(testCase)
+            % Tests the plane_jacobian() method  
+            for i=1:testCase.mat.NUMBER_OF_RANDOM
+                Jl = testCase.mat.result_of_line_jacobian(:,:,i);
+                x = DQ(testCase.mat.result_of_fkm(:,i)).normalize();
+                J = testCase.mat.result_of_pose_jacobian(:,:,i);                
+                testCase.assertEqual(testCase.serial_manipulator_robot.line_jacobian(J,x, DQ.k), Jl,...
+                    "AbsTol", testCase.almost_equal_tolerance,...
+                    "Error in plane_jacobian")          
+            end   
+        end        
+
 
     end
 end
