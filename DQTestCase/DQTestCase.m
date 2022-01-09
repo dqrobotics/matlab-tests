@@ -118,8 +118,6 @@
 % - Juan Jose Quiroz Omana (juanjqo@g.ecc.u-tokyo.ac.jp)
 
 classdef DQTestCase < matlab.unittest.TestCase
-    %DQTESTCASE Summary of this class goes here
-    %   Detailed explanation goes here
     
     properties 
         % MAT corresponds to the m-file that contains the tested results. (See above)
