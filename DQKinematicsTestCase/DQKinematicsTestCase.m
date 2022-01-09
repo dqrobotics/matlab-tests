@@ -162,7 +162,7 @@ classdef DQKinematicsTestCase < matlab.unittest.TestCase
             end   
         end   
 
-        function test_line_to_line_distance_jacobian(testCase)
+        function test_line_to_line_distance_jacobian(testCase) % not working!
             % Tests the line_to_line_jacobian() method  
             for i=1:testCase.mat.NUMBER_OF_RANDOM
                 Jl = testCase.mat.result_of_line_to_line_distance_jacobian(:,:,i);
