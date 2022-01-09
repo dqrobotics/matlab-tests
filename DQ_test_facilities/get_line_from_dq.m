@@ -22,6 +22,7 @@ function [ret] = get_line_from_dq(dq, primitive)
 % GET_LINE_FROM_DQ(DQ, PRIMITIVE) returns the Plücker line that is
 % collinear to the PRIMITIVE axis of a frame represented by the dual
 % quaternion dq.
+% See (Eq. 17 of Marinho et al., 2019)
     dq = normalize(dq);
     ret = Ad(rotation(dq), primitive) + DQ.E * cross(translation(dq), Ad(rotation(dq), primitive));
 end
