@@ -6,7 +6,7 @@ clc
 
 
 runtests('DQ_TestCase')
-runtests('DQ_KinematicsTestCase')
+runtests('DQ_KinematicsTestCase') 
 
 
 
