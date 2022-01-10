@@ -123,7 +123,7 @@ classdef DQTestCase < matlab.unittest.TestCase
         % MAT corresponds to the m-file that contains the tested results. (See above)
         mat;  
         % TOLERANCE is used to compare if two results are equal.
-        tolerance = 1e-15;  
+        tolerance = DQ.threshold;  
         % This is used to compare if two results are equal but using a lower tolerance.
         almost_equal_tolerance = 1e-11; 
     end
