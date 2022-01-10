@@ -130,7 +130,7 @@ classdef DQTestCase < matlab.unittest.TestCase
     
     methods
         function testCase = DQTestCase()
-            data = load('DQ_test.mat');
+            data = load('data/DQ_test.mat');
             testCase.mat = data;                  
         end   
     end
