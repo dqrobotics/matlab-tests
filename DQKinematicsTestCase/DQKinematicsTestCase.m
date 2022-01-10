@@ -197,7 +197,7 @@ classdef DQKinematicsTestCase < matlab.unittest.TestCase
     
     methods
         function testCase = DQKinematicsTestCase()
-            data = load('DQ_Kinematics_test.mat');
+            data = load('data/DQ_Kinematics_test.mat');
             testCase.mat = data;        
             testCase.serial_manipulator_robot = KukaLwr4Robot.kinematics();
             testCase.whole_body_robot = KukaYoubot.kinematics();

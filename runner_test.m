@@ -5,7 +5,7 @@ clc
 
 
 
-%runtests("DQTestCase")
+runtests("DQTestCase")
 runtests("DQKinematicsTestCase")
 
 
