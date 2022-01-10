@@ -7,7 +7,7 @@ for i = 1:length(result)
 end
 
 
-result = runtests('DQTestCase');
+result = runtests('DQ_TestCase');
 
 for i = 1:length(result)
     if result(i).Failed
@@ -16,7 +16,7 @@ for i = 1:length(result)
 end
 
 
-result = runtests('DQKinematicsTestCase');
+result = runtests('DQ_KinematicsTestCase');
 
 for i = 1:length(result)
     if result(i).Failed

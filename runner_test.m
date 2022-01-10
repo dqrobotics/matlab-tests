@@ -5,8 +5,8 @@ clc
 
 
 
-runtests("DQTestCase")
-runtests("DQKinematicsTestCase")
+runtests('DQ_TestCase')
+runtests('DQ_KinematicsTestCase')
 
 
 
