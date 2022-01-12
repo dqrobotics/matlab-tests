@@ -19,6 +19,6 @@ sudo apt install git
 echo "export PATH=PATH:YOUR_MATLAB_PATH" >> ~/.bashrc
 source ~/.bashrc
 ```
-5. Configure your GithubActions runner using the github interface. 
+5. Configure your GithubActions runner using the [github interface](https://github.com/organizations/dqrobotics/settings/actions/runners). 
 6. Add the tag `MATLAB` to your runner.
 7. Rejoice.
